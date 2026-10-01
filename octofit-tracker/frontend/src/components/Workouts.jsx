@@ -2,7 +2,11 @@ import CollectionFeedback from './CollectionFeedback.jsx'
 import useCollection from '../hooks/useCollection.js'
 
 export default function Workouts() {
-  const { items, loading, error } = useCollection('/api/workouts/')
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+  const endpoint = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
+    : 'http://localhost:8000/api/workouts/'
+  const { items, loading, error } = useCollection(endpoint)
 
   return (
     <section className="data-section" aria-labelledby="workouts-title">

@@ -3,7 +3,11 @@ import useCollection from '../hooks/useCollection.js'
 import { displayName } from '../lib/api.js'
 
 export default function Leaderboard() {
-  const { items, loading, error } = useCollection('/api/leaderboard/')
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+  const endpoint = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+    : 'http://localhost:8000/api/leaderboard/'
+  const { items, loading, error } = useCollection(endpoint)
   const rows = items.flatMap((board) =>
     Array.isArray(board.entries)
       ? board.entries.map((entry) => ({ ...entry, period: board.period }))

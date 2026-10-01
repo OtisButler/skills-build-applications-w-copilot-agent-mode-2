@@ -3,7 +3,11 @@ import useCollection from '../hooks/useCollection.js'
 import { displayName } from '../lib/api.js'
 
 export default function Teams() {
-  const { items, loading, error } = useCollection('/api/teams/')
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+  const endpoint = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
+    : 'http://localhost:8000/api/teams/'
+  const { items, loading, error } = useCollection(endpoint)
 
   return (
     <section className="data-section" aria-labelledby="teams-title">

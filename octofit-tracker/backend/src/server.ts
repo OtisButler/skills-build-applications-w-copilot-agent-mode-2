@@ -21,11 +21,11 @@ app.get('/api/health', (_request, response) => {
 });
 app.use('/api', apiRouter);
 
-const port = Number(process.env.PORT ?? 8000);
+const port = 8000;
 
 connectDatabase()
   .then(() => {
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log(`OctoFit API listening on port ${port}`);
     });
   })

@@ -3,7 +3,7 @@ import useCollection from '../hooks/useCollection.js'
 import { displayName } from '../lib/api.js'
 
 export default function Users() {
-  const { items, loading, error } = useCollection('users')
+  const { items, loading, error } = useCollection('/api/users/')
 
   return (
     <section className="data-section" aria-labelledby="users-title">

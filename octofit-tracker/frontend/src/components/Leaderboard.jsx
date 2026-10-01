@@ -3,7 +3,7 @@ import useCollection from '../hooks/useCollection.js'
 import { displayName } from '../lib/api.js'
 
 export default function Leaderboard() {
-  const { items, loading, error } = useCollection('leaderboard')
+  const { items, loading, error } = useCollection('/api/leaderboard/')
   const rows = items.flatMap((board) =>
     Array.isArray(board.entries)
       ? board.entries.map((entry) => ({ ...entry, period: board.period }))

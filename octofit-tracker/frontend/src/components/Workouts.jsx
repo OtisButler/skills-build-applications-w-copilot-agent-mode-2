@@ -2,7 +2,7 @@ import CollectionFeedback from './CollectionFeedback.jsx'
 import useCollection from '../hooks/useCollection.js'
 
 export default function Workouts() {
-  const { items, loading, error } = useCollection('workouts')
+  const { items, loading, error } = useCollection('/api/workouts/')
 
   return (
     <section className="data-section" aria-labelledby="workouts-title">

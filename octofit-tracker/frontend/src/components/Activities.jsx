@@ -3,7 +3,7 @@ import useCollection from '../hooks/useCollection.js'
 import { displayName, formatDate } from '../lib/api.js'
 
 export default function Activities() {
-  const { items, loading, error } = useCollection('activities')
+  const { items, loading, error } = useCollection('/api/activities/')
   const hasNoRows = !loading && !error && items.length === 0
 
   return (

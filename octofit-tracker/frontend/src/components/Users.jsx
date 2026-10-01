@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import CollectionFeedback from './CollectionFeedback.jsx'
+import SortableHeader from './SortableHeader.jsx'
 import useCollection from '../hooks/useCollection.js'
 import { displayName } from '../lib/api.js'
 
@@ -8,6 +10,27 @@ export default function Users() {
     ? `https://${codespaceName}-8000.app.github.dev/api/users/`
     : 'http://localhost:8000/api/users/'
   const { items, loading, error } = useCollection(endpoint)
+  const [sort, setSort] = useState({ key: 'name', direction: 'asc' })
+  const updateSort = (key) => {
+    setSort((current) => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc',
+    }))
+  }
+  const sortedUsers = [...items].sort((left, right) => {
+    const getValue = (user) => {
+      if (sort.key === 'name') return displayName(user)
+      if (sort.key === 'team') return typeof user.team === 'string' ? user.team : user.team?.name || ''
+      if (sort.key === 'points') return Number(user.totalPoints) || 0
+      return user.username || ''
+    }
+    const leftValue = getValue(left)
+    const rightValue = getValue(right)
+    const comparison = typeof leftValue === 'number'
+      ? leftValue - rightValue
+      : String(leftValue).localeCompare(String(rightValue), undefined, { numeric: true, sensitivity: 'base' })
+    return sort.direction === 'asc' ? comparison : -comparison
+  })
 
   return (
     <section className="data-section" aria-labelledby="users-title">
@@ -22,9 +45,16 @@ export default function Users() {
       {!loading && !error && items.length > 0 && (
         <div className="table-scroll">
           <table className="table align-middle tracker-table">
-            <thead><tr><th>Athlete</th><th>Username</th><th>Team</th><th>Points</th></tr></thead>
+            <thead>
+              <tr>
+                <SortableHeader label="Athlete" sortKey="name" sort={sort} onSort={updateSort} />
+                <SortableHeader label="Username" sortKey="username" sort={sort} onSort={updateSort} />
+                <SortableHeader label="Team" sortKey="team" sort={sort} onSort={updateSort} />
+                <SortableHeader label="Points" sortKey="points" sort={sort} onSort={updateSort} />
+              </tr>
+            </thead>
             <tbody>
-              {items.map((user, index) => (
+              {sortedUsers.map((user, index) => (
                 <tr key={user._id || user.id || user.username || index}>
                   <td className="primary-cell">{displayName(user)}</td>
                   <td>@{user.username || '-'}</td>
